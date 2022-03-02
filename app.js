@@ -1,35 +1,29 @@
 const express = require('express');
 const app = express();
-const bodyParser = require("body-parser");
 
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.post('/bfhl', (req,res)=>{
+app.get('/', (req,res)=>{
+    res.status(200).send("Hello Programmers");
+})
+app.post('/bfhl', (req, res) => {
+    console.log(req.body);
+    const data = [...req.body.data]
 
-    const obj = {
-        is_success : true,
-        user_id: "ridhima_bansal_12102001",
-        email: "ridhima0606.cse19@chitkara.edu.in",
-        roll_number: 1910990606,
-        numbers: [],
-        alphabets: []
-    }
-    const {data} = req.body;
-    const responseJson = JSON.parse(data);
-    var list = (responseJson.data).length;
-    for (var i = 0; i < list; i++) 
-    {
-     var counter = responseJson.data[i];
-     if(counter >=0 && counter <=9) {
-         numbers.push(counter);
-     } else if((/[a-zA-Z]/).test(counter)) {
-         alphabets.push(counter);
-     }
-     }
-     res.json(obj);
-});
+    let numbers = data.filter((value) => !isNaN(value))
+
+    let alphabets = data.filter((value) => (/[a-zA-Z]/).test(value));
+    res.status(200).send({
+        'is_success': 'true',
+        'user_id': 'yourname_yourrollno',
+        'email': 'yourrmail',
+        'roll_number': 'yourrollno',
+        'numbers': numbers,
+        'alphabet': alphabets
+    })
+})
 
 
-app.listen(3000, (req,res)=>{
+app.listen(process.env.PORT || 3000, (req,res)=>{
     console.log("Server is running on port 3000");
 });
